@@ -1,3 +1,20 @@
+## Fork Notice
+This is fork of the original [cosmo-python](https://github.com/oxfordcontrol/cosmo-python). The original cosmo-py was built using PyJulia which is not compatible with conda, among having other issues. This fork uses the more modern JuliaCall.
+
+### Compatibility with upstream cosmo-python
+
+This fork is designed to be a drop-in replacement for the original package.
+
+- No user-facing changes are made.
+- Existing code written for cosmo-python should run without modification.
+- Only the internal Julia interface has been migrated from PyJulia to JuliaCall.
+
+### Changes
+
+1. Swapped Python-Julia interface from PyJulia to JuliaCall.
+
+2. Appropriate changes in readme file below.
+
 # Python interface for COSMO.jl
 
   <a href="https://travis-ci.org/oxfordcontrol/cosmo-python"><img src="https://travis-ci.org/oxfordcontrol/cosmo-python.svg?branch=master"></a>
@@ -29,11 +46,9 @@ The wrapper makes a call to Julia via the pyjulia interface. To set this up:
 
 **On the Python side:**
 
-3. Install `pyjulia`, the interface that lets you call Julia code from Python: `python3 -m pip install julia` 
+3. Install `juliacall`, the interface that lets you call Julia code from Python: `python3 -m pip install juliacall` 
 
-4. In Python run `import julia` followed by `julia.install()` to finish the `pyjulia` setup.
-
-5. Install this package: `git clone git@github.com:oxfordcontrol/cosmo-python.git` (for now, later via pip / conda)
+4. Install this package: `git clone git@github.com:RickyZiegahn/cosmo-python.git` (for now, later via pip / conda)
 
 
 ## Example
