@@ -1,7 +1,7 @@
 # modified from https://github.com/oxfordcontrol/cosmo-python to use added functions in utils.py to support JuliaCall
 
 from juliacall import Main as jl
-import utils
+import cosmopy.utils as utils
 
 jl.seval('using Pkg; Pkg.add("COSMO")')
 jl.seval("using COSMO")
