@@ -1,8 +1,57 @@
+# modified from https://github.com/oxfordcontrol/cosmo-python to include to_julia and to_python functions to support JuliaCall
 # modified from https://github.com/oxfordcontrol/osqp-python/blob/master/module/utils.py
 from warnings import warn
 import numpy as np
 from scipy import sparse
+from juliacall import Main as jl
 
+
+def to_julia(obj):
+    """
+    Recursively convert Python object to Julia objects suitable for juliacall.
+    """
+    if isinstance(obj, np.ndarray):
+        return jl.Array(obj)
+    elif isinstance(obj, (list, tuple)):
+        return jl.Array([to_julia(x) for x in obj])
+    elif isinstance(obj, dict):
+        # convert both keys and values recursively
+        return jl.Dict({to_julia(k) : to_julia(v) for k, v in obj.items()})
+    elif isinstance(obj, bool):
+        return obj
+    elif isinstance(obj, int):
+        return jl.Int64(obj)
+    elif isinstance(obj, float):
+        return jl.Float64(obj)
+    
+    # Other objects pass as-is
+    else:
+        return obj
+
+def to_python(obj):
+    """
+    Recursively convert Julia object to Python objects suitable for juliacall.
+    """
+    if hasattr(obj, "_jl_type_"):
+        t = str(obj._jl_type_)
+        if "Symbol" in t:
+            return str(obj)
+        elif "Dict" in t:
+            return {to_python(k): to_python(v) for k, v in obj.items()}
+        elif "Array" in t:
+            arr = [to_python(x) for x in obj]
+            if all(isinstance(x, (int, float, np.number)) for x in arr):
+                return np.array(arr)
+            return arr
+        else:
+            # recursively convert Julia struct fields
+            if hasattr(obj, "__dict__") or hasattr(obj, "_jl_fieldnames_"):
+                return {name: to_python(getattr(obj, name)) for name in obj._jl_fieldnames_}
+    elif isinstance(obj, (int, float, bool)):
+        return obj
+    else:
+        return obj
+    
 def get_dimension(cone):
     """
     `cone` holds the dimensions of the individual cones.
@@ -116,4 +165,4 @@ def prepare_data(P = None, q = None, A = None, b = None, cone = None, l = None, 
             l = None
             u = None
 
-        return (P.indices, P.indptr, P.data, q, A.indices, A.indptr, A.data, b, cone, l, u, m, n)
+        return to_julia((P.indices, P.indptr, P.data, q, A.indices, A.indptr, A.data, b, cone, l, u, m, n))

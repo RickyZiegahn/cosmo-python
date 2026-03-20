@@ -1,5 +1,11 @@
-from julia import COSMO as _COSMO
-import cosmopy.utils as utils
+# modified from https://github.com/oxfordcontrol/cosmo-python to use added functions in utils.py to support JuliaCall
+
+from juliacall import Main as jl
+import utils
+
+jl.seval('using Pkg; Pkg.add("COSMO")')
+jl.seval("using COSMO")
+_COSMO = jl.COSMO
 
 import numpy as np
 from scipy import sparse
@@ -42,7 +48,7 @@ class Model:
             _COSMO.set_b(self.model, *unpacked_data)
         else:
             # pass settings dictionary and let COSMO transform it internally
-            _COSMO.set_b(self.model, *unpacked_data, settings)
+            _COSMO.set_b(self.model, *unpacked_data, utils.to_julia(settings))
         self.setup_complete = True
 
     def optimize(self):
@@ -51,6 +57,7 @@ class Model:
         """
         if self.setup_complete:
             res = _COSMO.optimize_b(self.model)
+            # self.result = utils.to_python(res)
             self.result = res
             self.solved = True
         else:
@@ -69,18 +76,18 @@ class Model:
                 raise ValueError("Wrong dimension for variable x")
 
             if y is None:
-                _COSMO.warm_start_primal_b(self.model, x)
+                _COSMO.warm_start_primal_b(self.model, utils.to_julia(x))
 
         if y is not None:
             if len(y) != m:
                 raise ValueError("Wrong dimension for variable y")
 
             if x is None:
-                _COSMO.warm_start_dual_b(self.model, y)
+                _COSMO.warm_start_dual_b(self.model, utils.to_julia(y))
 
         if x is not None and y is not None:
-                _COSMO.warm_start_primal_b(self.model, x)
-                _COSMO.warm_start_dual_b(self.model, y)
+                _COSMO.warm_start_primal_b(self.model, utils.to_julia(x))
+                _COSMO.warm_start_dual_b(self.model, utils.to_julia(y))
 
         if x is None and y is None:
             raise ValueError("Unrecognized fields")
@@ -88,37 +95,37 @@ class Model:
     # solution getters
     def get_objective_value(self):
         if self.solved:
-            return self.result.obj_val
+            return float(self.result.obj_val)
         else:
             warn('The problem has not been solved yet. Call solve().')
 
     def get_x(self):
         if self.solved:
-            return self.result.x
+            return np.array(self.result.x)
         else:
             warn('The problem has not been solved yet. Call solve().')
 
     def get_y(self):
         if self.solved:
-            return self.result.y
+            return np.array(self.result.y)
         else:
             warn('The problem has not been solved yet. Call solve().')
 
     def get_s(self):
         if self.solved:
-            return self.result.s
+            return np.array(self.result.s)
         else:
             warn('The problem has not been solved yet. Call solve().')
 
     def get_status(self):
         if self.solved:
-            return self.result.status
+            return str(self.result.status)
         else:
             warn('The problem has not been solved yet. Call solve().')
 
     def get_iter(self):
         if self.solved:
-            return self.result.iter
+            return int(self.result.iter)
         else:
             warn('The problem has not been solved yet. Call solve().')
 
