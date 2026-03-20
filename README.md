@@ -17,8 +17,6 @@ This fork is designed to be a drop-in replacement for the original package.
 
 # Python interface for COSMO.jl
 
-  <a href="https://travis-ci.org/oxfordcontrol/cosmo-python"><img src="https://travis-ci.org/oxfordcontrol/cosmo-python.svg?branch=master"></a>
-
 This is a thin Python-wrapper around the Julia package [COSMO.jl](https://github.com/oxfordcontrol/COSMO.jl). COSMO is a general purpose solver for convex conic optimisation problems of the form:
 <p align="center">
 <img src="https://github.com/migarstka/COSMO_assets/blob/master/cosmo_format.png" width=220px>
