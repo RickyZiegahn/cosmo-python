@@ -96,9 +96,9 @@ def prepare_data(P = None, q = None, A = None, b = None, cone = None, l = None, 
         #
         # Create elements if they are not specified
         if P is None:
-            P = sparse.csc_matrix((np.zeros((0,), dtype=np.double),
-                                   np.zeros((0,), dtype=np.int),
-                                   np.zeros((n+1,), dtype=np.int)),
+            P = sparse.csc_matrix((np.zeros((0,), dtype=np.float64),
+                                   np.zeros((0,), dtype=np.int64),
+                                   np.zeros((n+1,), dtype=np.int64)),
                                   shape=(n, n))
         if q is None:
             q = np.zeros(n)
