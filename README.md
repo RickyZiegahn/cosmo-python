@@ -38,15 +38,13 @@ The wrapper makes a call to Julia via the pyjulia interface. To set this up:
 
 **On the Julia side:**
 
-1. Install the *Julia* programming language (`v1.5+` recommended) [[Julia Download page]](https://julialang.org/downloads/)
+1. Install the *Julia* programming language (`>=v1.6`) [[Julia Download page]](https://julialang.org/downloads/)
 
 2. Open the Julia REPL and install the Julia package `COSMO.jl`: `(type ]): pkg> add COSMO` (at least `v0.7.7+`)
 
 **On the Python side:**
 
-3. Install `juliacall`, the interface that lets you call Julia code from Python: `python3 -m pip install juliacall` 
-
-4. Install this package: `git clone git@github.com:RickyZiegahn/cosmo-python.git` (for now, later via pip / conda)
+3. Install this package: `git clone git@github.com:RickyZiegahn/cosmo-python.git` (for now, later via pip / conda)
 
 
 ## Example
@@ -90,7 +88,7 @@ x_opt = model.get_x() # query the optimal primal variable x_opt
 
 print("Solved with objective value: ", obj_val, " in", times["solver_time"], "s.")
 ```
-More examples can be found in [/examples](https://github.com/oxfordcontrol/cosmo-python/tree/master/examples).
+More examples can be found in [/examples](https://github.com/rickyziegahn/cosmo-python/tree/master/examples).
 
 ## Documentation
 These notes only refer to the usage of this interface. For a more general overview take a look at the [Documentation](https://oxfordcontrol.github.io/COSMO.jl/stable/) of the Julia package.
