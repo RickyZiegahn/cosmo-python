@@ -3,8 +3,15 @@
 from juliacall import Main as jl
 import cosmopy.utils as utils
 
-jl.seval('using Pkg; Pkg.add("COSMO")')
-jl.seval("using COSMO")
+jl.seval("""
+using Pkg
+try
+    @eval using COSMO
+catch
+    Pkg.add("COSMO")
+    @eval using COSMO
+end
+""")
 _COSMO = jl.COSMO
 
 import numpy as np
