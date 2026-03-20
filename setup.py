@@ -6,7 +6,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setuptools.setup(
-    name="cosmopy",
+    name="cosmopy-juliacall",
     version="0.1.0",
     author="Michael Garstka, Richard Ziegahn",
     author_email="richard.ziegahn@mail.mcgill.ca",
